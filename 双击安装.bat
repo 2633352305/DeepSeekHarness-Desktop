@@ -12,10 +12,13 @@ echo.
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0install.ps1"
 set RESULT=%ERRORLEVEL%
 echo.
-if %RESULT%==0 (
-    echo [OK] Install finished. Shortcuts were created on Desktop and Start Menu.
-) else (
+if not %RESULT%==0 (
     echo [FAIL] Install failed with code %RESULT%. See the error messages above.
+    echo.
+    pause
+    exit /b 1
 )
-echo.
-pause
+echo [OK] Install finished. Shortcuts were created on Desktop and Start Menu.
+echo Closing this window automatically...
+timeout /t 3 /nobreak >nul
+exit /b 0

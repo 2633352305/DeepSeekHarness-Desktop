@@ -10,14 +10,20 @@ Dim OutLog : OutLog = ScriptDir & "\dsh-web.log"
 Dim ErrLog : ErrLog = ScriptDir & "\dsh-web.err.log"
 
 Function IsWebUp()
+    Dim st
     IsWebUp = False
     On Error Resume Next
     Dim http : Set http = CreateObject("WinHttp.WinHttpRequest.5.1")
     http.Open "GET", Url, False
     http.SetTimeouts 1500, 1500, 1500, 1500
     http.Send
-    If Err.Number = 0 And http.Status = 200 Then IsWebUp = True
+    If Err.Number <> 0 Then
+        On Error GoTo 0
+        Exit Function
+    End If
+    st = http.Status
     On Error GoTo 0
+    If st = 200 Then IsWebUp = True
 End Function
 
 Function FindEdge()
@@ -45,7 +51,7 @@ End Function
 Dim edge : edge = FindEdge()
 If edge = "" Then
     fso.CreateTextFile(ErrLog, True).WriteLine "ERROR: Microsoft Edge not found. Please install it first: https://www.microsoft.com/edge"
-    MsgBox "未找到 Microsoft Edge，请先安装后重试。" & vbCrLf & "Microsoft Edge not found. Please install it first: https://www.microsoft.com/edge", vbExclamation, "DeepSeek Harness"
+    MsgBox "Microsoft Edge not found. Please install it first: https://www.microsoft.com/edge", vbExclamation, "DeepSeek Harness"
     WScript.Quit 1
 End If
 
@@ -80,7 +86,7 @@ If Not IsWebUp() Then
     shell.Run "powershell -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File """ & Ps1File & """ -StartService", 0, True
     If Not IsWebUp() Then
         fso.CreateTextFile(ErrLog, True).WriteLine "ERROR: dsh web failed to start within 90s. See log: " & OutLog
-        MsgBox "dsh web 服务启动失败（90 秒超时）。请稍后重试；若反复失败，重新运行安装包里的'双击安装.bat'。" & vbCrLf & "Failed to start the dsh web service within 90s. Please retry, or re-run '双击安装.bat'." & vbCrLf & vbCrLf & "Log: " & ErrLog, vbExclamation, "DeepSeek Harness"
+        MsgBox "Failed to start the dsh web service within 90s." & vbCrLf & "Please try again; if it keeps failing, re-run the installer." & vbCrLf & vbCrLf & "Log: " & ErrLog, vbExclamation, "DeepSeek Harness"
         WScript.Quit 1
     End If
 End If
