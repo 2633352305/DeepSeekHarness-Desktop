@@ -74,7 +74,7 @@ function Start-DshWebBackground {
     $out = Join-Path $InstallDir "dsh-web.log"
     $err = Join-Path $InstallDir "dsh-web.err.log"
     New-Item -ItemType Directory -Path $InstallDir -Force | Out-Null
-    Start-Process -FilePath "cmd.exe" -ArgumentList "/c", "dsh web" -WorkingDirectory $HOME -WindowStyle Hidden `
+    Start-Process -FilePath "cmd.exe" -ArgumentList "/c", "dsh web --no-open" -WorkingDirectory $HOME -WindowStyle Hidden `
         -RedirectStandardOutput $out -RedirectStandardError $err
     return $true
 }

@@ -45,6 +45,7 @@ End Function
 Dim edge : edge = FindEdge()
 If edge = "" Then
     fso.CreateTextFile(ErrLog, True).WriteLine "ERROR: Microsoft Edge not found. Please install it first: https://www.microsoft.com/edge"
+    MsgBox "未找到 Microsoft Edge，请先安装后重试。" & vbCrLf & "Microsoft Edge not found. Please install it first: https://www.microsoft.com/edge", vbExclamation, "DeepSeek Harness"
     WScript.Quit 1
 End If
 
@@ -79,6 +80,7 @@ If Not IsWebUp() Then
     shell.Run "powershell -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File """ & Ps1File & """ -StartService", 0, True
     If Not IsWebUp() Then
         fso.CreateTextFile(ErrLog, True).WriteLine "ERROR: dsh web failed to start within 90s. See log: " & OutLog
+        MsgBox "dsh web 服务启动失败（90 秒超时）。请稍后重试；若反复失败，重新运行安装包里的'双击安装.bat'。" & vbCrLf & "Failed to start the dsh web service within 90s. Please retry, or re-run '双击安装.bat'." & vbCrLf & vbCrLf & "Log: " & ErrLog, vbExclamation, "DeepSeek Harness"
         WScript.Quit 1
     End If
 End If

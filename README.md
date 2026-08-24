@@ -82,6 +82,7 @@ msedge --app=http://127.0.0.1:3080  ← 独立应用窗口打开 DSH 后台
 - **安装后找不到 `dsh` 命令**：重开终端让 PATH 生效
 - **端口 3080 被占用**：停止占用该端口的进程后再点击应用（升级/卸载仅停止 dsh 相关进程，不影响其他应用）
 - **应用窗口打不开**：查看 `dsh-web.err.log`；确认 Edge 已安装
+- **应用窗口提示"无法访问此页面 / ERR_CONNECTION_REFUSED"**：dsh web 后台服务未运行（常见于重启电脑后通过 edge://apps 的 PWA 图标打开——PWA 只是网页壳，不会启动服务）。双击桌面 "DeepSeek Harness" 快捷方式即可自动启动服务，或手动运行 `dsh web` 后刷新页面
 - **为什么 edge://apps 里没有它**：见上方"关于在 Edge 里安装为应用"的说明
 
 ---
@@ -139,6 +140,10 @@ msedge --app=http://127.0.0.1:3080  ← standalone app window opens the DSH UI
 | Stop the background service | `Stop-Process -Id (Get-NetTCPConnection -LocalPort 3080).OwningProcess -Force` |
 | Reinstall / update dsh | Re-run `双击安装.bat` (skips automatically when already up to date) |
 | View logs | `%LOCALAPPDATA%\dsh-edge-app\dsh-web.log` / `dsh-web.err.log` |
+
+### FAQ
+
+- **The app window shows "ERR_CONNECTION_REFUSED"**: the dsh web service is not running (typical after a reboot when opened via the edge://apps PWA icon — the PWA is only a web shell and never starts the service). Double-click the "DeepSeek Harness" desktop shortcut (it starts the service automatically) or run `dsh web` manually, then refresh.
 
 ### Removal
 
